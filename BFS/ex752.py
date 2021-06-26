@@ -7,9 +7,10 @@ class Solution:
             return -1
         if target == '0000':
             return 0
-        seen = set('0000')
-        deadends = set(deadends)
-        # seen = seen.union(deadends)
+        seen = set()
+        seen.add('0000')
+        for s in deadends:
+            seen.add(s)
         minus = ['9', '0', '1', '2', '3', '4', '5', '6', '7', '8']
         adds = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
 
@@ -23,28 +24,26 @@ class Solution:
                 keys.append(new)
             return keys
 
-        last_dict = {'0000': 0}
-        cnt, len_seen = 0, 0
-        while len(seen) - len_seen > 0:
-            len_seen = len(seen)
-            new_dict = {}
-            for key in last_dict.keys():
-                cnt = last_dict[key]
-                new_keys = gen_new_key(key)
-                for new_key in new_keys:
-                    seen.add(new_key)
-                    if new_key == target:
+        last_nums = ['0000']
+        cnt = 0
+        while last_nums:
+            new_nums = []
+            for num in last_nums:
+                new_answers = gen_new_key(num)
+                for new_num in new_answers:
+                    if new_num == target:
                         return cnt + 1
-                    if new_key not in deadends and new_key not in new_dict:
-                        new_dict[new_key] = cnt + 1
-            last_dict = new_dict
+                    if new_num not in seen:
+                        new_nums.append(new_num)
+                        seen.add(new_num)
+            last_nums = new_nums
+            cnt += 1
         return -1
-
 
 if __name__ == '__main__':
     solution = Solution()
-    deadends = ["0201","0101","0102","1212","2002"]
-    target = "0202"
+    # deadends = ["0201","0101","0102","1212","2002"]
+    # target = "0202"
     # deadends = ["8888"]
     # target = "0009"
     # deadends = ["8887", "8889", "8878", "8898", "8788", "8988", "7888", "9888"]; target = "8888"
