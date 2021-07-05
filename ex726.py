@@ -30,7 +30,8 @@ class Solution:
                 res = ''
                 for key, value in cnt_dict:
                     res += key
-                    res += str(value)
+                    if value > 1:
+                        res += str(value)
             else:
                 res = ''
                 for key, value in cnt_dict.items():
@@ -38,17 +39,32 @@ class Solution:
                     res += str(value)
             return res
 
-        sub_formula, j = '', 0
+        left, result, j = [], '', 0
         while j < len_f:
+            if formula[j] == '(':
+                result += formula[j]
+                left.append(len(result)-1)
+            elif formula[j] == ')':
+                num = 0
+                while j+1 < len_f and formula[j+1].isdigit():
+                    j += 1
+                    num = num*10 + int(formula[j])
+                if num == 0:
+                    num = 1
+                start = left.pop()+1
+                process = atoms(result[start:], num, False)
+                result = result[:start-1] + process
+            else:
+                result += formula[j]
+            j += 1
 
-
-
-
-
-        return res
+        result = atoms(result, 1, True)
+        return result
 
 
 if __name__ == '__main__':
     solution = Solution()
-    formula = "H2OHC3"
+    formula = "H2O"
+    formula = "((N42)24(OB40Li30CHe3O48LiNN26)33(C12Li48N30H13HBe31)21(BHN30Li26BCBe47N40)15(H5)16)14"
+    # formula = "K4(ON(SO3)2)2"
     print(solution.countOfAtoms(formula))
