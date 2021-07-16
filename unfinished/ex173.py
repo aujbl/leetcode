@@ -6,21 +6,21 @@ Created on Sun Mar 28 08:14:13 2021
 """
 
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, val=0, left=None, right=None):
-#         self.val = val
-#         self.left = left
-#         self.right = right
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 class BSTIterator:
 
     def __init__(self, root: TreeNode):
-
+        pass
 
     def next(self) -> int:
-
+        return 0
 
     def hasNext(self) -> bool:
-
+        return True
 
 
 # Your BSTIterator object will be instantiated and called as such:

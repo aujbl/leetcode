@@ -7,4 +7,5 @@ Created on Wed Mar 10 12:31:51 2021
 
 class Solution:
     def calculate(self, s: str) -> int:
+        return 0
         

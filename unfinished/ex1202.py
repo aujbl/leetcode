@@ -16,6 +16,7 @@ class Solution:
                 if not union:
                     union = set(pairs[i])
                 else:
+                    pass
                     
                     
             

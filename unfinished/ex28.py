@@ -26,3 +26,13 @@ class Solution:
             else:
                 i += 1
         return -1
+
+if __name__ == '__main__':
+    solution = Solution()
+    haystack = "hello"
+    needle = "ll"
+    haystack = "aaaaa"
+    needle = "bba"
+    haystack = ""
+    needle = ""
+    print(solution.strStr(haystack, needle))
