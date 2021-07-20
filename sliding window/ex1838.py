@@ -45,7 +45,6 @@ class Solution:
         return res
 
 
-
 if __name__ == '__main__':
     solution = Solution()
     nums = [3, 9, 6]
