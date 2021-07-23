@@ -41,6 +41,7 @@ class Solution:
         if not head:
             return None
         node = head
+        # 完成链表复制
         while node:
             new_node = Node(node.val)
             new_node.next = node.next
@@ -49,12 +50,15 @@ class Solution:
         node = head
         new_head = node.next
         new_node = new_head
+        # 处理random
         while node:
             if node.random:
-                new_node.random = node.random.next.random
+                node.next.random = node.random.next
             node = node.next.next
-            new_node = node.next
-        return new_node
+            if node:
+                new_node.next = node.next
+                new_node = new_node.next
+        return new_head
 
 
 if __name__ == '__main__':
