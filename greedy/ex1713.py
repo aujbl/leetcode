@@ -5,6 +5,7 @@ from typing import List
 class Solution:
     def minOperations(self, target: List[int], arr: List[int]) -> int:
         target_dict = {}
+
         for i, t in enumerate(target):
             target_dict[t] = i
         d = []
