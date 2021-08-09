@@ -10,8 +10,8 @@ class Solution:
         for i in range(2, n+1):
             candidates = [p[i] * primes[i] for i in range(len_p)]
             min_can, min_idx = candidates[0], 0
-            for j in range(len_p):
-                if candidates[j] <
+            # for j in range(len_p):
+            #     if candidates[j] <
 
 if __name__ == '__main__':
     solution = Solution()
