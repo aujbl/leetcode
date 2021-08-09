@@ -8,11 +8,18 @@ class Solution:
         len_p = len(primes)
         p = [1] * len_p
         for i in range(2, n+1):
-            candidates = [p[i] * primes[i] for i in range(len_p)]
-            min_can, min_idx = candidates[0], 0
-            # for j in range(len_p):
-            #     if candidates[j] <
+            candidates = [dp[p[k]] * primes[k] for k in range(len_p)]
+            dp[i] = min(candidates)
+            for j in range(len_p):
+                if candidates[j] == dp[i]:
+                    p[j] += 1
+        return dp[n]
+
 
 if __name__ == '__main__':
     solution = Solution()
-    print(solution)
+    n = 12
+    primes = [2, 7, 13, 19]
+    n = 1
+    primes = [2, 3, 5]
+    print(solution.nthSuperUglyNumber(n, primes))
