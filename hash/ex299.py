@@ -44,7 +44,6 @@ class Solution:
         return str(same) + 'A' + str(total_same - same) + 'B'
 
 
-
 if __name__ == '__main__':
     solution = Solution()
     secret = "1807"
