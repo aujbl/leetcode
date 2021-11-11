@@ -10,6 +10,7 @@ from itertools import product
 import re
 
 
+
 class Solution:
     def findMinStep(self, board: str, hand: str) -> int:
         def clean(s):
