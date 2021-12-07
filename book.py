@@ -6,9 +6,15 @@ from tkinter import *
 import time
 import schedule
 
+import smtplib
+from email.mime.text import MIMEText
+
 global s
+global len_inform
 s = time.time()
 
+has_inform = set()
+len_inform = len(has_inform)
 book_time = {
     '08:00-09:00': 0, '09:01-10:00': 0, '10:01-11:00': 0, '11:01-12:00': 0,
     '12:01-13:00': 0, '13:01-14:00': 0, '14:01-15:00': 0, '15:01-16:00': 0,
@@ -57,8 +63,52 @@ def silent(flag=True):
     return options
 
 
-def main():
+def mail(text=None):
+    # 设置服务器所需信息
+    # 163邮箱服务器地址
+    mail_host = 'smtp.qq.com'
+    # 163用户名
+    mail_user = '953486511@qq.com'
+    # 密码(部分邮箱为授权码)
+    mail_pass = 'lazvodsfjvmpbeii'
+    # 邮件发送方邮箱地址
+    sender = '953486511@qq.com'
+    # 邮件接受方邮箱地址，注意需要[]包裹，这意味着你可以写多个邮件地址群发
+    receivers = ['aujblee@foxmail.com']
+
+    # 设置email信息
+    # 邮件内容设置
+    message = MIMEText(text, 'plain', 'utf-8')
+    # 邮件主题
+    message['Subject'] = '订场'
+    # 发送方信息
+    message['From'] = sender
+    # 接受方信息
+    message['To'] = receivers[0]
+
+    # 登录并发送邮件
+    try:
+        # smtp = smtplib.SMTP()
+        # # 连接到服务器
+        # smtp.connect(mail_host, 25)
+
+        smtp = smtplib.SMTP_SSL(mail_host)
+
+        # 登录到服务器
+        smtp.login(mail_user, mail_pass)
+        # 发送
+        smtp.sendmail(
+            sender, receivers, message.as_string())
+        # 退出
+        smtp.quit()
+        print('success')
+    except smtplib.SMTPException as e:
+        print('error', e)  # 打印错误
+
+
+def main(m=True, show=True):
     global s
+    global len_inform
     options = silent()
     # 创建 WebDriver 对象，指明使用chrome浏览器驱动
     wd = webdriver.Chrome(r'd:\chromedriver\chromedriver.exe', options=options)
@@ -74,14 +124,21 @@ def main():
     text = ''
     for e in elements:
         if e.get_attribute('data-did') and e.get_attribute('data-timer') in book:
-            text += e.get_attribute('data-name') + '\t\t' + e.get_attribute('data-timer') + '\n'
+            name = e.get_attribute('data-name')
+            timer = e.get_attribute('data-timer')
+            has_inform.add((name + timer))
+            text += name + '\t\t' + timer + '\n'
 
-    if text:
-        show_message(text)
-    else:
-        print('%.1f' % (time.time() - s), 's')
-        s = time.time()
-        print("no site.")
+    if len(has_inform) > len_inform:
+        len_inform = len(has_inform)
+        if m:
+            mail(text)
+        if show:
+            show_message(text)
+    # else:
+    #     print('%.1f' % (time.time() - s), 's')
+    #     s = time.time()
+    #     print("no site.")
 
     wd.quit()
 
