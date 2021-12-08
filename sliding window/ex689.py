@@ -24,7 +24,6 @@ class Solution:
                 sum3 -= nums[i - k + 1]
                 sum2 -= nums[i - 2 * k + 1]
                 sum1 -= nums[i - 3 * k + 1]
-
         return res
 
 
