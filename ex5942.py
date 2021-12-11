@@ -38,6 +38,7 @@ class Solution:
 
 if __name__ == '__main__':
     solution = Solution()
+
     digits = [0, 0, 0]
     print(solution.findEvenNumbers(digits))
 
