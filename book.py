@@ -1,10 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from tkinter import *
 
 import time
 import schedule
+from tqdm import tqdm
 
 import smtplib
 from email.mime.text import MIMEText
@@ -111,7 +113,8 @@ def main(m=True, show=True):
     global len_inform
     options = silent()
     # 创建 WebDriver 对象，指明使用chrome浏览器驱动
-    wd = webdriver.Chrome(r'd:\chromedriver\chromedriver.exe', options=options)
+    s = Service(r'd:\chromedriver\chromedriver.exe')
+    wd = webdriver.Chrome(service=s, options=options)
 
     # 调用WebDriver 对象的get方法 可以让浏览器打开指定网址
     wd.get('http://116.57.72.197:9099/product/show.html?id=346')
@@ -135,10 +138,11 @@ def main(m=True, show=True):
             mail(text)
         if show:
             show_message(text)
-    # else:
-    #     print('%.1f' % (time.time() - s), 's')
-    #     s = time.time()
-    #     print("no site.")
+    else:
+        print('.....')
+        # print('%.1f' % (time.time() - s), 's')
+        # s = time.time()
+        # print("no site.")
 
     wd.quit()
 
@@ -153,5 +157,7 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             print('quit')
             break
+        except Exception:
+            show_message("wrong!")
 
     # main()
