@@ -11,9 +11,7 @@ from tqdm import tqdm
 import smtplib
 from email.mime.text import MIMEText
 
-global s
-global len_inform
-s = time.time()
+start = time.time()
 
 has_inform = set()
 len_inform = len(has_inform)
@@ -23,6 +21,7 @@ book_time = {
     '16:01-18:00': 0, '18:01-20:00': 1, '20:01-22:00': 1
 }
 book = [k for k, v in book_time.items() if v == 1]
+cnt = 0
 
 
 def show_message(text):
@@ -31,6 +30,7 @@ def show_message(text):
     # root.minsize(500, 200)   #定义窗口的大小
     # root.maxsize(1000, 400)  #不过定义窗口这个功能我没有使用
     root.withdraw()  # hide window
+    root.wm_attributes('-topmost', 1)
     # 获取屏幕的宽度和高度，并且在高度上考虑到底部的任务栏，为了是弹出的窗口在屏幕中间
     screenwidth = root.winfo_screenwidth()
     screenheight = root.winfo_screenheight() - 100
@@ -54,15 +54,6 @@ def show_message(text):
                                    (screenheight - root.winfo_height()) // 2))
     root.deiconify()
     root.mainloop()
-
-
-def silent(flag=True):
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    options.add_argument('log-level=3')
-
-    return options
 
 
 def mail(text=None):
@@ -108,13 +99,25 @@ def mail(text=None):
         print('error', e)  # 打印错误
 
 
-def main(m=True, show=True):
-    global s
-    global len_inform
-    options = silent()
-    # 创建 WebDriver 对象，指明使用chrome浏览器驱动
+def silent(flag=True):
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    options.add_argument('log-level=3')
+
     s = Service(r'd:\chromedriver\chromedriver.exe')
     wd = webdriver.Chrome(service=s, options=options)
+
+    return wd
+
+
+def main(wd, m=True, show=True):
+    global start, cnt
+    global len_inform
+    # options = silent()
+    # 创建 WebDriver 对象，指明使用chrome浏览器驱动
+    # s = Service(r'd:\chromedriver\chromedriver.exe')
+    # wd = webdriver.Chrome(service=s, options=options)
 
     # 调用WebDriver 对象的get方法 可以让浏览器打开指定网址
     wd.get('http://116.57.72.197:9099/product/show.html?id=346')
@@ -130,34 +133,41 @@ def main(m=True, show=True):
             name = e.get_attribute('data-name')
             timer = e.get_attribute('data-timer')
             has_inform.add((name + timer))
-            text += name + '\t\t' + timer + '\n'
+            text += name + '    ' + timer + '\n'
 
     if len(has_inform) > len_inform:
         len_inform = len(has_inform)
-        if m:
-            mail(text)
+        # if m:
+        #     mail(text)
+        #     exit(0)
         if show:
             show_message(text)
     else:
-        print('.....')
-        # print('%.1f' % (time.time() - s), 's')
-        # s = time.time()
+        if cnt > 50:
+            cnt = 0
+            print('.', end='\n')
+        else:
+            print('.', end='')
+        cnt += 1
+    #     print('.....', '%.1f'.rjust(3) % (time.time() - start), 's'.rjust(2))
+    #     start = time.time()
         # print("no site.")
 
-    wd.quit()
+    # wd.quit()
 
 
 if __name__ == '__main__':
-    main()
-    schedule.every(10).to(30).seconds.do(main)
-    # schedule.every(5).to(10).minutes.do(main)
+    wd = silent()
+    schedule.every(5).to(10).seconds.do(main, wd)
     while True:
         try:
             schedule.run_pending()
         except KeyboardInterrupt:
             print('quit')
+            wd.quit()
             break
         except Exception:
-            show_message("wrong!")
+            # show_message("wrong!")
+            print('sth wrong...')
 
     # main()
